@@ -15,3 +15,7 @@ docker-compose up -d
 docker exec frontend-ipfs-1 ipfs add /export/hello.txt
 ```
 5. addedの後ろにQmで始まるハッシュ値が表示される。この値を控えておく
+6. アップロードしたファイルを確認するときはブラウザに以下のアドレスを入れる。ipfs.ioは接続するためのゲートウェイであって、他にも様々なものがある。（自分で作ることもできる。）
+```sh
+https://ipfs.io/ipfs/<ハッシュ値>
+```
