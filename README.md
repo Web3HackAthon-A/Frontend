@@ -1,1 +1,15 @@
 # Frontend
+
+#IPFSの使い方
+
+1. dockerを実行する
+2. docker-compose.ymlを実行
+```sh
+docker-compose up -d
+```
+3. stagingフォルダーにaddしたいファイルを入れる
+4. ipfsに載せる(frontend-ipfs-1となっているところにはdocker psでコンテナ名を確認してそれを入れる, hello.txtにはファイル名を入れる)
+```sh
+docker exec frontend-ipfs-1 ipfs add /export/hello.txt
+```
+5. addedの後ろにQmで始まるハッシュ値が表示される。この値を控えておく

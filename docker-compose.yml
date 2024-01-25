@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    ports:
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:5001:5001
+      - 4001:4001
+      - 4001:4001/udp
+    volumes:
+      - ./ipfs-data:/data/ipfs
+      - ./staging:/export
+    working_dir: /data/ipfs
+    restart: always
