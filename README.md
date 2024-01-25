@@ -1,6 +1,8 @@
 # Frontend
 
-#IPFSの使い方
+IPFSの使い方
+
+参考：https://docs.ipfs.tech/install/run-ipfs-inside-docker/#set-up
 
 1. dockerを実行する
 2. docker-compose.ymlを実行
