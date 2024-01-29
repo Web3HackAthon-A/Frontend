@@ -3,20 +3,20 @@
     <title>Knowlege Place</title>
 </head>
 <body>
-    <form method="post" action="/upload_content/" enctype="multipart/form-data">
+    <form method="post" action="/" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="id_document">Upload file:</label>
         <input id="id_document" type="file" name="document">
-        <input type="hidden" name="action" value="upload_content">
+        <input type="hidden" name="action" value="upload">
         <button type="submit">Upload Content</button>
     </form>
 
-    <form method="post" action="/view_content/">
+    <!-- <form method="post" action="/view_content/">
         {% csrf_token %}
         <label for="id_content_id">Content ID:</label>
         <input id="id_content_id" name="content_id">
         <input type="hidden" name="action" value="view_content">
         <button type="submit">View Content</button>
-    </form>
+    </form> -->
 </body>
 </html>
