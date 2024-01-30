@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ドラッグ＆ドロップ ファイルアップロード</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff3e0; /* 薄いオレンジ色の背景 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .header {
+    background-color: #ffa726; /* ヘッダーの背景色をオレンジ色に */
+    padding: 10px 0;
+    text-align: center;
+    color: white;
+  }
+  .header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+  }
+  .container {
+    width: 80%;
+    max-width: 640px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ffccbc; /* 枠線をオレンジ色に */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(255, 165, 0, 0.2); /* オレンジ色の影 */
+  }
+  .drop-zone {
+    border: 2px dashed #ffa726; /* オレンジ色の点線 */
+    border-radius: 5px;
+    padding: 30px;
+    font-size: 20px;
+    color: #ffa726; /* テキストをオレンジ色に */
+    margin-bottom: 15px; /* ドロップゾーンとボタンの間にスペースを追加 */
+  }
+  .drop-zone.dragover {
+    border-color: #ff9800; /* ドラッグ時の枠線を濃いオレンジ色に */
+    color: #ff9800; /* ドラッグ時のテキストを濃いオレンジ色に */
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ffa726; /* ボタンの背景をオレンジ色に */
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .button:hover {
+    background-color: #ff9800; /* ホバー時に濃いオレンジ色に変更 */
+  }
+  h2 {
+    color: #ff5722; /* タイトルをオレンジ色に */
+    text-align: center;
+  }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+  // 以前のスクリプトをここに貼り付け
+});
+</script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Knowledge Token</h1>
+</div>
+
+<div class="container">
+  <h2>ファイルアップロード</h2>
+  <div id="drop-zone" class="drop-zone">
+    ファイルをドラッグ＆ドロップ<br>or<br>
+    <input id="file-input" type="file" multiple style="display: none;" />
+    <button class="button" onclick="document.getElementById('file-input').click()">ファイルを選択</button>
+  </div>
+  <button id="upload-button" class="button">アップロード</button>
+</div>
+
+</body>
+</html>
