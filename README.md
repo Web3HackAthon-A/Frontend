@@ -20,8 +20,7 @@ docker exec frontend-ipfs-1 ipfs add /export/hello.txt
 https://ipfs.io/ipfs/<ハッシュ値>
 ```
 
-！！注意！！
-Pythonでipfsを操作するライブラリipfshttpclientは最新のipfsをサポートしない。
+※Pythonでipfsを操作するライブラリipfshttpclientは最新のipfsをサポートしない。
 そのため、今のdockerの設定では操作できない（docker hubに載っているイメージより昔のバージョンが必要）
 macの場合、以下の手順でローカルにv0.7.0バージョンをインストールすることを推奨
 

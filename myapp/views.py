@@ -90,14 +90,18 @@ def create_nft(request):
         # client = ipfshttpclient.connect('/ip4/127.0.0.1/tcp/5001/http')
         # res = client.add(uploaded_file)
         ipfs_hash = request.session.get('ipfs_hash')
+        token_id = request.POST.get('token_id')
+
         if not ipfs_hash:
             return HttpResponse('No file uploaded')
+
+        token_id = int(token_id)
 
         ipfs_url = f"https://ipfs.io/ipfs/{ipfs_hash}"
 
         contract = w3.eth.contract(address=Web3.to_checksum_address(NFT_CONTRACT_ADDRESS), abi=NFT_ABI)
 
-        tx_hash = contract.functions.safeMint(user, ipfs_url).transact()
+        tx_hash = contract.functions.safeMint(user, token_id, ipfs_url).transact()
 
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
