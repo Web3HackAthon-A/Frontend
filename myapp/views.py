@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from web3 import Web3
+from web3 import Account
 import json
 import ipfshttpclient
 import os
@@ -16,12 +17,16 @@ TOKEN_CONTRACT_ADDRESS = '0x014AB673309fC40E87A969Ae1Be334c0dd84dEb6'
 with open(TOKEN_ABI_PATH) as f:
     TOKEN_ABI = json.load(f)
 
-NFT_CONTRACT_ADDRESS = '0x9fef1a325f1587007a52609d09fef5915d9c64ac'
+NFT_CONTRACT_ADDRESS = '0xe4a693a844641c5f0d4210c83cb87d197698a5e7'
 
 with open(NFT_ABI_PATH) as f:
     NFT_ABI = json.load(f)
 
 w3 = Web3(Web3.HTTPProvider('https://sepolia.infura.io/v3/e0f9f3150fec48b7922a2c81553ad952'))
+
+# private_key = os.getenv('MY_PRIVATE_KEY')
+
+# account = Account.from_key(private_key)
 
 #ファイルアップロード後画面
 # def upload_index(request):
@@ -90,29 +95,32 @@ def create_nft(request):
         # client = ipfshttpclient.connect('/ip4/127.0.0.1/tcp/5001/http')
         # res = client.add(uploaded_file)
         ipfs_hash = request.session.get('ipfs_hash')
-        token_id = request.POST.get('token_id')
+        # token_id = request.POST.get('token_id')
 
         if not ipfs_hash:
             return HttpResponse('No file uploaded')
 
-        token_id = int(token_id)
+        # token_id = int(token_id)
 
         ipfs_url = f"https://ipfs.io/ipfs/{ipfs_hash}"
 
         contract = w3.eth.contract(address=Web3.to_checksum_address(NFT_CONTRACT_ADDRESS), abi=NFT_ABI)
 
-        tx_hash = contract.functions.safeMint(user, token_id, ipfs_url).transact()
+        tx_hash = contract.functions.mintNFT(ipfs_url).transact()
 
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-    if tx_receipt['status'] == 1:
-        tx_hash = contract.functions.transfer(user, 1).transact()
-        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        return render(request, 'transaction_receipt.html', {'tx_receipt': tx_receipt})
 
-        if tx_receipt['status'] == 1:
-            return HttpResponse("NFT creation successful")
-        else:
-            return HttpResponse("Token granting failed")
-    else:
-        return HttpResponse("NFT creation failed")
+    # if tx_receipt['status'] == True:
+    #     tx_hash = contract.functions.transfer(user, 1).transact()
+    #     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+    #     if tx_receipt['status'] == True:
+    #         return render(request, 'transaction_receipt.html', {'tx_receipt': tx_receipt})
+    #         # return HttpResponse("NFT creation successful")
+    #     else:
+    #         return HttpResponse("Token granting failed")
+    # else:
+    #     return HttpResponse("NFT creation failed")
     

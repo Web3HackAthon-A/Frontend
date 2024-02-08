@@ -6,8 +6,8 @@
     <p>Your IPFS hash is: {{ ipfs_hash }}</p>
     <form method="POST" action="/create_nft/">
         {% csrf_token %}
-        <label for="id_token_id">Token ID:</label>
-        <input id="id_token_id" name="token_id">
+        <!-- <label for="id_token_id">Token ID:</label>
+        <input id="id_token_id" name="token_id"> -->
         <button type="submit">OK</button>
     </form>
     <button onclick="window.location.href='{% url 'index' %}';">
