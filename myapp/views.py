@@ -3,9 +3,14 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from web3 import Web3
 from web3 import Account
+from eth_account import Account
+from eth_account.signers.local import LocalAccount
+from web3.middleware import construct_sign_and_send_raw_middleware
 import json
 import ipfshttpclient
 import os
+import environ
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOKEN_ABI_PATH = os.path.join(BASE_DIR, 'myapp', 'token_abi.json')
@@ -24,9 +29,22 @@ with open(NFT_ABI_PATH) as f:
 
 w3 = Web3(Web3.HTTPProvider('https://sepolia.infura.io/v3/e0f9f3150fec48b7922a2c81553ad952'))
 
-# private_key = os.getenv('MY_PRIVATE_KEY')
+connection_check = w3.is_connected()
+print(connection_check)
 
-# account = Account.from_key(private_key)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+private_key = env('PRIVATE_KEY')
+
+assert private_key is not None, "You must set PRIVATE_KEY environment variable"
+# assert private_key.startswith("0x"), "Private key must start with 0x hex prefix"
+
+account: LocalAccount = Account.from_key(private_key)
+w3.middleware_onion.add(construct_sign_and_send_raw_middleware(account))
+
+print(f"Your hot wallet address is {account.address}")
 
 #ファイルアップロード後画面
 # def upload_index(request):
@@ -104,9 +122,25 @@ def create_nft(request):
 
         ipfs_url = f"https://ipfs.io/ipfs/{ipfs_hash}"
 
-        contract = w3.eth.contract(address=Web3.to_checksum_address(NFT_CONTRACT_ADDRESS), abi=NFT_ABI)
+        balance = w3.eth.get_balance(Web3.to_checksum_address(user))
 
-        tx_hash = contract.functions.mintNFT(ipfs_url).transact()
+
+        # Reference the deployed contract:
+        # billboard = w3.eth.contract(address=deployed_addr, abi=abi)
+
+        contract = w3.eth.contract(address=Web3.to_checksum_address(user), abi=NFT_ABI)
+
+        # tx_hash = contract.constructor("gm").transact({"from": acct2.address})
+        # receipt = w3.eth.get_transaction_receipt(tx_hash)
+        # deployed_addr = receipt[NFT_CONTRACT_ADDRESS]
+
+        built_tx = contract.functions.mintNFT(ipfs_url).build_transaction({
+            "nonce": w3.eth.get_transaction_count(account.address)
+        })
+        
+        signed_tx = w3.eth.account.sign_transaction(built_tx, private_key=account.key)
+
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
